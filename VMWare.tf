@@ -1,3 +1,5 @@
+variable "VMName" {}
+
 provider "vsphere" {
   user           = "administrator@rllab.local"
   password       = "Pass@123"
@@ -71,7 +73,7 @@ variable "chef_provision" {
 }
 
 resource "vsphere_virtual_machine" "Petclinic_VM" {
-  name             = "Petclinic_VM"
+  name             = "${var.VMName}"
   resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
 
