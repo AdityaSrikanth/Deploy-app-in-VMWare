@@ -3,7 +3,7 @@ variable "VMName" {}
 provider "vsphere" {
   user           = "administrator@rllab.local"
   password       = "Pass@123"
-  vsphere_server = "192.168.150.25"
+  vsphere_server = "45.112.137.230"
 
   # If you have a self-signed cert
   allow_unverified_ssl = true
