@@ -24,7 +24,7 @@ data "vsphere_resource_pool" "pool" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name          = "Catalyst"
+  name          = "VMWare_Template"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
@@ -42,33 +42,10 @@ variable "remote_connection" {
     connection_type = "ssh"
 
     # User to connect to the server
-    connection_user = "adithya"
+    connection_user = "ubuntu"
 
     # Password to connect to the server
     connection_password = "Pass@123"
-  }
-}
-
-# My connections for the Chef server
-variable "chef_provision" {
-  type        = "map"
-  description = "Configuration details for chef server"
-
-  default = {
-    # A default node name
-    node_name_default = "terraform-1"
-
-    # Run it again? You probably need to recreate the client
-    recreate_client = true
-
-    # Chef server :)
-    server_url = "https://manage.chef.io/organizations/rl_adi/"
-
-    # SSL is lame, so lets turn it off
-    ssl_verify_mode_setting = ":verify_none"
-
-    # The username that you authenticate your chef server
-    user_name = "adithya_s"
   }
 }
 
@@ -100,13 +77,15 @@ resource "vsphere_virtual_machine" "Petclinic_VM" {
 
   # remote execution provisioner
   provisioner "remote-exec" {
-    inline = [
-      "git clone https://github.com/spring-projects/spring-petclinic.git",
-      "cd spring-petclinic",
-      "nohup ./mvnw spring-boot:run &",
+    inline = [	
+		"git clone https://github.com/spring-projects/spring-petclinic.git",
+		"cd /home/ubuntu/spring-petclinic",      
+		"nohup ./mvnw spring-boot:run </dev/null >/dev/null 2>&1 &",
+	  "sleep 4",
     ]
 
     connection {
+      host     = "45.112.137.229"
       type     = "${var.remote_connection.["connection_type"]}"
       user     = "${var.remote_connection.["connection_user"]}"
       password = "${var.remote_connection.["connection_password"]}"
